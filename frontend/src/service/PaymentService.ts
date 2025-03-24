@@ -1,7 +1,6 @@
 import axios from "axios"
-import {IUserProfile} from "@/types/userservice.interface";
 
-const responseUrl = `http://localhost:8040/api/payments`
+const responseUrl = `/api/payments`
 axios.defaults.baseURL = responseUrl
 
 axios.interceptors.request.use(config => {

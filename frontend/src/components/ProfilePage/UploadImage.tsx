@@ -38,7 +38,7 @@ export default function ImageUpload({ currentImage }: ImageUploadProps) {
 
             const userId = localStorage.getItem("userId");
             const response = await fetch(
-                `http://localhost:8030/api/users/upload-image?user_id=${userId}`,
+                `/api/users/upload-image?user_id=${userId}`,
                 {
                     method: "POST",
                     body: formData,

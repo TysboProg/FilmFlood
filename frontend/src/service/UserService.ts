@@ -1,7 +1,7 @@
 import axios from "axios";
 import {IUserProfile} from "@/types/userservice.interface";
 
-const responseUrl = `http://localhost:8030/api/users`
+const responseUrl = `/api/users`
 axios.defaults.baseURL = responseUrl
 
 axios.interceptors.request.use(config => {

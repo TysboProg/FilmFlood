@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const responseUrl = `http://localhost:8030/api/users`
+const responseUrl = `/api/users`
 axios.defaults.baseURL = responseUrl
 
 export class AuthService {

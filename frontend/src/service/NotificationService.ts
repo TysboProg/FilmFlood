@@ -1,9 +1,12 @@
 import axios from "axios";
 
+const responseUrl = `/api/notifications`
+axios.defaults.baseURL = responseUrl
+
 export class NotificationService {
     static async sendPaymentEmailSuccess() {
         return new Promise(res => {
-            axios.get(`http://localhost:8020/api/notifications/send-order-email`, {
+            axios.get(`/send-order-email`, {
                 withCredentials: true,
             })
                 .then(response => res(response.data))
@@ -16,7 +19,7 @@ export class NotificationService {
 
     static async sendAuthEmailSuccess() {
         return new Promise(res => {
-            axios.get(`http://localhost:8020/api/notifications/send-auth-email`, {
+            axios.get(`/api/notifications/send-auth-email`, {
                 withCredentials: true,
             })
                 .then(response => res(response.data))

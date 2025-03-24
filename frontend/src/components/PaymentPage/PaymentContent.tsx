@@ -8,7 +8,7 @@ export default function PaymentContent() {
             const response: any = await PaymentService.createPayment(
                 email,
                 1000.0,
-                "http://localhost:3000/payment/payment-success"
+                "https://film-flood.ru/payment/payment-success"
             );
 
             console.log(response)
