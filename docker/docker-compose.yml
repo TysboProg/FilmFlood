@@ -2,7 +2,6 @@ volumes:
   movie-data:
   payment-data:
   users-data:
-  notification-data:
 
 networks:
   main-network:
@@ -27,61 +26,74 @@ services:
       main-network:
 
   postgres-movie:
-    image: postgres:latest
+    image: postgres:15-alpine
     container_name: postgres-movie
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: inal_2411
       POSTGRES_USER: postgres
       POSTGRES_DB: movie
+      PGDATA: /var/lib/postgresql/data/pgdata
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready --username=postgres --dbname=movie" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d movie" ]
       interval: 15s
       timeout: 10s
       retries: 10
+      start_period: 30s
     volumes:
       - movie-data:/var/lib/postgresql/data
     networks:
       main-network:
+        aliases:
+          - db-movie
 
   postgres-users:
-    image: postgres:latest
-    container_name: postgres-users
-    ports:
-      - "5433:5433"
-    environment:
-      POSTGRES_PASSWORD: inal_2411
-      POSTGRES_USER: postgres
-      POSTGRES_DB: users
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready --username=postgres --dbname=users" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-    volumes:
-      - users-data:/var/lib/postgresql/data
-    networks:
-      main-network:
+      image: postgres:15-alpine
+      container_name: postgres-users
+      restart: unless-stopped
+      ports:
+        - "5433:5433"  # Внутри контейнера всегда 5432
+      environment:
+        POSTGRES_PASSWORD: inal_2411
+        POSTGRES_USER: postgres
+        POSTGRES_DB: users
+        PGDATA: /var/lib/postgresql/data/pgdata
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U postgres -d users" ]
+        interval: 15s
+        timeout: 10s
+        retries: 10
+        start_period: 30s
+      volumes:
+        - users-data:/var/lib/postgresql/data
+      networks:
+        main-network:
+          aliases:
+            - db-users
 
   postgres-payment:
-    image: postgres:latest
-    container_name: postgres-payment
-    ports:
-      - "5434:5434"
-    environment:
-      POSTGRES_PASSWORD: inal_2411
-      POSTGRES_USER: postgres
-      POSTGRES_DB: payment
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready --username=postgres --dbname=payment" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-    volumes:
-      - payment-data:/var/lib/postgresql/data
-    networks:
-      main-network:
+      image: postgres:15-alpine
+      container_name: postgres-payment
+      restart: unless-stopped
+      ports:
+        - "5434:5434"  # Внутри контейнера всегда 5432
+      environment:
+        POSTGRES_PASSWORD: inal_2411
+        POSTGRES_USER: postgres
+        POSTGRES_DB: payment
+        PGDATA: /var/lib/postgresql/data/pgdata
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U postgres -d payment" ]
+        interval: 15s
+        timeout: 10s
+        retries: 10
+        start_period: 30s
+      volumes:
+        - payment-data:/var/lib/postgresql/data
+      networks:
+        main-network:
 
   backend-movie:
     build:
