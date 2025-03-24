@@ -31,13 +31,14 @@ services:
     image: postgres:15-alpine
     container_name: postgres-movie
     restart: unless-stopped
+    user: postgres
     ports:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: inal_2411
       POSTGRES_USER: postgres
       POSTGRES_DB: movie
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d movie"]
       interval: 15s
@@ -53,13 +54,14 @@ services:
     image: postgres:15-alpine
     container_name: postgres-users
     restart: unless-stopped
+    user: postgres
     ports:
-      - "5433:5432"  # Исправлен порт
+      - "5433:5432"
     environment:
       POSTGRES_PASSWORD: inal_2411
       POSTGRES_USER: postgres
       POSTGRES_DB: users
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d users"]
       interval: 15s
@@ -75,13 +77,14 @@ services:
     image: postgres:15-alpine
     container_name: postgres-payment
     restart: unless-stopped
+    user: postgres
     ports:
-      - "5434:5432"  # Исправлен порт
+      - "5434:5432"
     environment:
       POSTGRES_PASSWORD: inal_2411
       POSTGRES_USER: postgres
       POSTGRES_DB: payment
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d payment"]
       interval: 15s
@@ -98,7 +101,7 @@ services:
       context: ../backend/movie
       dockerfile: Dockerfile
     container_name: backend-movie
-    command: ["sh", "-c", "alembic upgrade head"]  # Упрощена команда
+    command: ["sh", "-c", "while ! nc -z postgres-movie 5432; do sleep 1; done && alembic upgrade head && python main.py"]
     environment:
       MOVIE_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-movie:5432/movie
       REDIS_URL: redis://81.177.222.26:6379
@@ -137,7 +140,7 @@ services:
       context: ../backend/users
       dockerfile: Dockerfile
     container_name: backend-users
-    command: ["sh", "-c", "alembic upgrade head"]  # Упрощена команда
+    command: ["sh", "-c", "while ! nc -z postgres-users 5432; do sleep 1; done && alembic upgrade head && python main.py"]
     environment:
       USERS_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-users:5432/users
       KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
@@ -170,7 +173,7 @@ services:
       context: ../backend/payment
       dockerfile: Dockerfile
     container_name: backend-payment
-    command: ["sh", "-c", "alembic upgrade head"]  # Упрощена команда
+    command: ["sh", "-c", "while ! nc -z postgres-payment 5432; do sleep 1; done && alembic upgrade head && python main.py"]
     environment:
       YOOKASSA_ACCOUNT_ID: 1040268
       YOOKASSA_SECRET_KEY: test_lJbazFAJBCMo7j-1u4A7Jg-CZuqhiTbV70j_lx1AbMo
