@@ -1,10 +1,13 @@
 import os
 from functools import lru_cache
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
+ENV_FILE = BASE_DIR / "docker" / ".env"
 
 class S3Config(BaseSettings):
     bucket_name: str = Field(..., alias='S3_BUCKET_NAME')
@@ -14,7 +17,7 @@ class S3Config(BaseSettings):
     endpoint_url: str = Field(..., alias='S3_ENDPOINT_URL')
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), '../../.env'),
+        env_file=ENV_FILE,
         extra='allow',
         env_prefix='S3_'
     )
@@ -23,7 +26,7 @@ class KafkaConfig(BaseSettings):
     bootstrap_servers: str = Field(..., alias='KAFKA_BOOTSTRAP_SERVERS')
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), '../../.env'),
+        env_file=ENV_FILE,
         extra='allow',
         env_prefix='KAFKA_'
     )
@@ -33,7 +36,7 @@ class YookassaConfig(BaseSettings):
     secret_key: str = Field(..., alias='YOOKASSA_SECRET_KEY')
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), '../../.env'),
+        env_file=ENV_FILE,
         extra='allow',
         env_prefix='YOOKASSA_'
     )
@@ -46,7 +49,7 @@ class Settings(BaseSettings):
     s3_conf: S3Config = Field(default_factory=S3Config)
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), '../../.env'),
+        env_file=ENV_FILE,
         extra='allow'
     )
 

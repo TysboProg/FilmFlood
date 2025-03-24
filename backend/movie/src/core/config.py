@@ -4,8 +4,8 @@ from pydantic import Field
 from dotenv import load_dotenv
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_FILE = BASE_DIR / ".env"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
+ENV_FILE = BASE_DIR / "docker" / ".env"
 if not load_dotenv(ENV_FILE):
     print(f"⚠️ Не удалось загрузить .env из {ENV_FILE}, проверьте путь!")
 
