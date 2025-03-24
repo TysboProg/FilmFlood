@@ -1,3 +1,5 @@
+version: '3.8'
+
 volumes:
   movie-data:
   payment-data:
@@ -23,7 +25,7 @@ services:
       - backend-notification
       - frontend-nextjs
     networks:
-      main-network:
+      - main-network
 
   postgres-movie:
     image: postgres:15-alpine
@@ -37,7 +39,7 @@ services:
       POSTGRES_DB: movie
       PGDATA: /var/lib/postgresql/data/pgdata
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d movie" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d movie"]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -45,63 +47,58 @@ services:
     volumes:
       - movie-data:/var/lib/postgresql/data
     networks:
-      main-network:
+      - main-network
 
   postgres-users:
-      image: postgres:15-alpine
-      container_name: postgres-users
-      restart: unless-stopped
-      ports:
-        - "5433:5433"  # Внутри контейнера всегда 5432
-      environment:
-        POSTGRES_PASSWORD: inal_2411
-        POSTGRES_USER: postgres
-        POSTGRES_DB: users
-        PGDATA: /var/lib/postgresql/data/pgdata
-      healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -U postgres -d users" ]
-        interval: 15s
-        timeout: 10s
-        retries: 10
-        start_period: 30s
-      volumes:
-        - users-data:/var/lib/postgresql/data
-      networks:
-        main-network:
+    image: postgres:15-alpine
+    container_name: postgres-users
+    restart: unless-stopped
+    ports:
+      - "5433:5432"  # Исправлен порт
+    environment:
+      POSTGRES_PASSWORD: inal_2411
+      POSTGRES_USER: postgres
+      POSTGRES_DB: users
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d users"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - users-data:/var/lib/postgresql/data
+    networks:
+      - main-network
 
   postgres-payment:
-      image: postgres:15-alpine
-      container_name: postgres-payment
-      restart: unless-stopped
-      ports:
-        - "5434:5434"  # Внутри контейнера всегда 5432
-      environment:
-        POSTGRES_PASSWORD: inal_2411
-        POSTGRES_USER: postgres
-        POSTGRES_DB: payment
-        PGDATA: /var/lib/postgresql/data/pgdata
-      healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -U postgres -d payment" ]
-        interval: 15s
-        timeout: 10s
-        retries: 10
-        start_period: 30s
-      volumes:
-        - payment-data:/var/lib/postgresql/data
-      networks:
-        main-network:
+    image: postgres:15-alpine
+    container_name: postgres-payment
+    restart: unless-stopped
+    ports:
+      - "5434:5432"  # Исправлен порт
+    environment:
+      POSTGRES_PASSWORD: inal_2411
+      POSTGRES_USER: postgres
+      POSTGRES_DB: payment
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d payment"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - payment-data:/var/lib/postgresql/data
+    networks:
+      - main-network
 
   backend-movie:
     build:
       context: ../backend/movie
       dockerfile: Dockerfile
     container_name: backend-movie
-    command:
-      - sh
-      - -c
-      - |
-        alembic revision --autogenerate &&
-        alembic upgrade head &&
+    command: ["sh", "-c", "alembic upgrade head"]  # Упрощена команда
     environment:
       MOVIE_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-movie:5432/movie
       REDIS_URL: redis://81.177.222.26:6379
@@ -116,7 +113,7 @@ services:
     ports:
       - "8010:8010"
     networks:
-      main-network:
+      - main-network
 
   backend-notification:
     build:
@@ -133,21 +130,16 @@ services:
     ports:
       - "8020:8020"
     networks:
-      main-network:
+      - main-network
 
   backend-users:
     build:
       context: ../backend/users
       dockerfile: Dockerfile
     container_name: backend-users
-    command:
-      - sh
-      - -c
-      - |
-        alembic revision --autogenerate &&
-        alembic upgrade head &&
+    command: ["sh", "-c", "alembic upgrade head"]  # Упрощена команда
     environment:
-      USERS_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-users:5433/users
+      USERS_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-users:5432/users
       KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
       S3_BUCKET_NAME: filmflood
       S3_REGION_NAME: ru-1
@@ -159,35 +151,30 @@ services:
     ports:
       - "8030:8030"
     networks:
-      main-network:
+      - main-network
 
   frontend-nextjs:
-       build:
-         context: ../frontend
-         dockerfile: Dockerfile
-       container_name: frontend-nextjs
-       ports:
-         - "3000:3000"
-       environment:
-         NODE_ENV: production
-       networks:
-         main-network:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: frontend-nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    networks:
+      - main-network
 
   backend-payment:
     build:
       context: ../backend/payment
       dockerfile: Dockerfile
     container_name: backend-payment
-    command:
-      - sh
-      - -c
-      - |
-        alembic revision --autogenerate &&
-        alembic upgrade head &&
+    command: ["sh", "-c", "alembic upgrade head"]  # Упрощена команда
     environment:
       YOOKASSA_ACCOUNT_ID: 1040268
       YOOKASSA_SECRET_KEY: test_lJbazFAJBCMo7j-1u4A7Jg-CZuqhiTbV70j_lx1AbMo
-      PAYMENT_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-payment:5434/payment
+      PAYMENT_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-payment:5432/payment
       REDIS_URL: redis://81.177.222.26:6379
       KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
       S3_BUCKET_NAME: filmflood
@@ -200,4 +187,4 @@ services:
     ports:
       - "8040:8040"
     networks:
-      main-network:            
+      - main-network
