@@ -96,12 +96,31 @@ services:
     networks:
       - main-network
 
+  frontend-nextjs:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: frontend-nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    networks:
+      - main-network
+
   backend-movie:
     build:
       context: ../backend/movie
       dockerfile: Dockerfile
     container_name: backend-movie
-    command: ["sh", "-c", "while ! nc -z postgres-movie 5432; do sleep 1; done && alembic upgrade head && python main.py"]
+    command: [
+      "sh", "-c",
+      "while ! nc -z postgres-movie 5432; do sleep 1; done && 
+         while ! nc -z 81.177.222.26 6379; do sleep 1; done && 
+         while ! nc -z 81.177.222.26 9092; do sleep 1; done && 
+         alembic upgrade head && 
+         python main.py || tail -f /dev/null"
+    ]
     environment:
       MOVIE_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-movie:5432/movie
       REDIS_URL: redis://81.177.222.26:6379
@@ -115,79 +134,68 @@ services:
       - postgres-movie
     ports:
       - "8010:8010"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8010/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - main-network
 
   backend-notification:
-    build:
-      context: ../backend/notification
-      dockerfile: Dockerfile
-    container_name: backend-notification
-    environment:
-      MAIL_USERNAME: inal.gergov152@yandex.ru
-      MAIL_PASSWORD: mkirsnxltnuvbspi
-      MAIL_SERVER: smtp.yandex.ru
-      MAIL_PORT: 587
-      REDIS_URL: redis://81.177.222.26:6379
-      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
-    ports:
-      - "8020:8020"
-    networks:
-      - main-network
+      build:
+        context: ../backend/notification
+        dockerfile: Dockerfile
+      container_name: backend-notification
+      command: [
+        "sh", "-c",
+        "while ! nc -z 81.177.222.26 6379; do sleep 1; done && 
+         while ! nc -z 81.177.222.26 9092; do sleep 1; done && 
+         python main.py || tail -f /dev/null"
+      ]
+      environment:
+        MAIL_USERNAME: inal.gergov152@yandex.ru
+        MAIL_PASSWORD: mkirsnxltnuvbspi
+        MAIL_SERVER: smtp.yandex.ru
+        MAIL_PORT: 587
+        REDIS_URL: redis://81.177.222.26:6379
+        KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
+      ports:
+        - "8020:8020"
+      healthcheck:
+        test: [ "CMD-SHELL", "curl -f http://localhost:8020/health || exit 1" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+      networks:
+        - main-network
 
+    # Аналогичные изменения для backend-users и backend-payment
   backend-users:
-    build:
-      context: ../backend/users
-      dockerfile: Dockerfile
-    container_name: backend-users
-    command: ["sh", "-c", "while ! nc -z postgres-users 5432; do sleep 1; done && alembic upgrade head && python main.py"]
-    environment:
-      USERS_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-users:5432/users
-      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
-      S3_BUCKET_NAME: filmflood
-      S3_REGION_NAME: ru-1
-      S3_AWS_SECRET_ACCESS_KEY: 3cefa4cd7b3e4350bc3d8bc9b146a062
-      S3_AWS_ACCESS_KEY_ID: f280aec5d0cf4e258fcdefbefe5321ac
-      S3_ENDPOINT_URL: https://s3.ru-1.storage.selcloud.ru
-    depends_on:
-      - postgres-users
-    ports:
-      - "8030:8030"
-    networks:
-      - main-network
-
-  frontend-nextjs:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
-    container_name: frontend-nextjs
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: production
-    networks:
-      - main-network
+      command: [
+        "sh", "-c",
+        "while ! nc -z postgres-users 5432; do sleep 1; done && 
+         while ! nc -z 81.177.222.26 9092; do sleep 1; done && 
+         alembic upgrade head && 
+         python main.py || tail -f /dev/null"
+      ]
+      healthcheck:
+        test: [ "CMD-SHELL", "curl -f http://localhost:8030/health || exit 1" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
 
   backend-payment:
-    build:
-      context: ../backend/payment
-      dockerfile: Dockerfile
-    container_name: backend-payment
-    command: ["sh", "-c", "while ! nc -z postgres-payment 5432; do sleep 1; done && alembic upgrade head && python main.py"]
-    environment:
-      YOOKASSA_ACCOUNT_ID: 1040268
-      YOOKASSA_SECRET_KEY: test_lJbazFAJBCMo7j-1u4A7Jg-CZuqhiTbV70j_lx1AbMo
-      PAYMENT_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-payment:5432/payment
-      REDIS_URL: redis://81.177.222.26:6379
-      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
-      S3_BUCKET_NAME: filmflood
-      S3_REGION_NAME: ru-1
-      S3_AWS_SECRET_ACCESS_KEY: 3cefa4cd7b3e4350bc3d8bc9b146a062
-      S3_AWS_ACCESS_KEY_ID: f280aec5d0cf4e258fcdefbefe5321ac
-      S3_ENDPOINT_URL: https://s3.ru-1.storage.selcloud.ru
-    depends_on:
-      - postgres-payment
-    ports:
-      - "8040:8040"
-    networks:
-      - main-network
+      command: [
+        "sh", "-c",
+        "while ! nc -z postgres-payment 5432; do sleep 1; done && 
+         while ! nc -z 81.177.222.26 6379; do sleep 1; done && 
+         while ! nc -z 81.177.222.26 9092; do sleep 1; done && 
+         alembic upgrade head && 
+         python main.py || tail -f /dev/null"
+      ]
+      healthcheck:
+        test: [ "CMD-SHELL", "curl -f http://localhost:8040/health || exit 1" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
