@@ -19,3 +19,5 @@ RUN uv venv create --system-site-packages && uv pip install --system -r pyprojec
 COPY . .
 
 EXPOSE 8010
+
+CMD ["uv", "run", "python", "main.py"]

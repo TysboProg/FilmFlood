@@ -121,7 +121,6 @@ services:
       - |
         alembic revision --autogenerate &&
         alembic upgrade head &&
-        uv run python main.py
     environment:
       MOVIE_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-movie:5432/movie
       REDIS_URL: redis://81.177.222.26:6379
@@ -143,11 +142,6 @@ services:
       context: ../backend/notification
       dockerfile: Dockerfile
     container_name: backend-notification
-    command:
-      - sh
-      - -c
-      - |
-        uv run python main.py
     environment:
       MAIL_USERNAME: inal.gergov152@yandex.ru
       MAIL_PASSWORD: mkirsnxltnuvbspi
@@ -171,7 +165,6 @@ services:
       - |
         alembic revision --autogenerate &&
         alembic upgrade head &&
-        uv run python main.py
     environment:
       USERS_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-users:5433/users
       KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
@@ -210,7 +203,6 @@ services:
       - |
         alembic revision --autogenerate &&
         alembic upgrade head &&
-        uv run python main.py
     environment:
       YOOKASSA_ACCOUNT_ID: 1040268
       YOOKASSA_SECRET_KEY: test_lJbazFAJBCMo7j-1u4A7Jg-CZuqhiTbV70j_lx1AbMo
