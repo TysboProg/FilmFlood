@@ -1,22 +1,7 @@
 volumes:
   movie-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./data/postgres-movie
   payment-data:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./data/postgres-payment
   users-data:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./data/postgres-users
 
 networks:
   main-network:
@@ -61,8 +46,6 @@ services:
       - movie-data:/var/lib/postgresql/data
     networks:
       main-network:
-        aliases:
-          - db-movie
 
   postgres-users:
       image: postgres:15-alpine
@@ -85,8 +68,6 @@ services:
         - users-data:/var/lib/postgresql/data
       networks:
         main-network:
-          aliases:
-            - db-users
 
   postgres-payment:
       image: postgres:15-alpine
