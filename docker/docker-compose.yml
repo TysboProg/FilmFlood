@@ -1,7 +1,22 @@
 volumes:
   movie-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/postgres-movie
   payment-data:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./data/postgres-payment
   users-data:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./data/postgres-users
 
 networks:
   main-network:

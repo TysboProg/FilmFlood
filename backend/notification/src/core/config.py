@@ -23,7 +23,6 @@ class KafkaConfig(BaseSettings):
     )
 
 class Settings(BaseSettings):
-    database_url: str = Field(..., alias='NOTIFICATION_DATABASE_URL')
     email: EmailConfig = Field(default_factory=EmailConfig)
     kafka: KafkaConfig = Field(default_factory=KafkaConfig)
 
