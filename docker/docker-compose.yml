@@ -115,14 +115,14 @@ services:
         alembic upgrade head &&
         uv run python main.py
     environment:
-      MOVIE_DATABASE_URL: ${MOVIE_DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
-      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
-      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
-      S3_REGION_NAME: ${S3_REGION_NAME}
-      S3_AWS_SECRET_ACCESS_KEY: ${S3_AWS_SECRET_ACCESS_KEY}
-      S3_AWS_ACCESS_KEY_ID: ${S3_AWS_ACCESS_KEY_ID}
-      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL}
+      MOVIE_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-movie:5432/movie
+      REDIS_URL: redis://81.177.222.26:6379
+      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
+      S3_BUCKET_NAME: filmflood
+      S3_REGION_NAME: ru-1
+      S3_AWS_SECRET_ACCESS_KEY: 3cefa4cd7b3e4350bc3d8bc9b146a062
+      S3_AWS_ACCESS_KEY_ID: f280aec5d0cf4e258fcdefbefe5321ac
+      S3_ENDPOINT_URL: https://s3.ru-1.storage.selcloud.ru
     depends_on:
       - postgres-movie
     ports:
@@ -143,13 +143,13 @@ services:
         alembic upgrade head &&
         uv run python main.py
     environment:
-      NOTIFICATION_DATABASE_URL: ${NOTIFICATION_DATABASE_URL}
-      MAIL_USERNAME: ${MAIL_USERNAME}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
-      MAIL_SERVER: ${MAIL_SERVER}
-      MAIL_PORT: ${MAIL_PORT}
-      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
-      REDIS_URL: ${REDIS_URL}
+      NOTIFICATION_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-notification:5435/notification
+      MAIL_USERNAME: inal.gergov152@yandex.ru
+      MAIL_PASSWORD: mkirsnxltnuvbspi
+      MAIL_SERVER: smtp.yandex.ru
+      MAIL_PORT: 587
+      REDIS_URL: redis://81.177.222.26:6379
+      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
     depends_on:
       - postgres-notification
     ports:
@@ -170,13 +170,13 @@ services:
         alembic upgrade head &&
         uv run python main.py
     environment:
-      USERS_DATABASE_URL: ${USERS_DATABASE_URL}
-      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
-      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
-      S3_REGION_NAME: ${S3_REGION_NAME}
-      S3_AWS_SECRET_ACCESS_KEY: ${S3_AWS_SECRET_ACCESS_KEY}
-      S3_AWS_ACCESS_KEY_ID: ${S3_AWS_ACCESS_KEY_ID}
-      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL}
+      USERS_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-users:5433/users
+      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
+      S3_BUCKET_NAME: filmflood
+      S3_REGION_NAME: ru-1
+      S3_AWS_SECRET_ACCESS_KEY: 3cefa4cd7b3e4350bc3d8bc9b146a062
+      S3_AWS_ACCESS_KEY_ID: f280aec5d0cf4e258fcdefbefe5321ac
+      S3_ENDPOINT_URL: https://s3.ru-1.storage.selcloud.ru
     depends_on:
       - postgres-users
     ports:
@@ -209,16 +209,16 @@ services:
         alembic upgrade head &&
         uv run python main.py
     environment:
-      YOOKASSA_ACCOUNT_ID: ${YOOKASSA_ACCOUNT_ID}
-      YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY}
-      PAYMENT_DATABASE_URL: ${PAYMENT_DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
-      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
-      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
-      S3_REGION_NAME: ${S3_REGION_NAME}
-      S3_AWS_SECRET_ACCESS_KEY: ${S3_AWS_SECRET_ACCESS_KEY}
-      S3_AWS_ACCESS_KEY_ID: ${S3_AWS_ACCESS_KEY_ID}
-      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL}
+      YOOKASSA_ACCOUNT_ID: 1040268
+      YOOKASSA_SECRET_KEY: test_lJbazFAJBCMo7j-1u4A7Jg-CZuqhiTbV70j_lx1AbMo
+      PAYMENT_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-payment:5434/payment
+      REDIS_URL: redis://81.177.222.26:6379
+      KAFKA_BOOTSTRAP_SERVERS: 81.177.222.26:9092
+      S3_BUCKET_NAME: filmflood
+      S3_REGION_NAME: ru-1
+      S3_AWS_SECRET_ACCESS_KEY: 3cefa4cd7b3e4350bc3d8bc9b146a062
+      S3_AWS_ACCESS_KEY_ID: f280aec5d0cf4e258fcdefbefe5321ac
+      S3_ENDPOINT_URL: https://s3.ru-1.storage.selcloud.ru
     depends_on:
       - postgres-payment
     ports:
