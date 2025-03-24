@@ -85,7 +85,7 @@ services:
 
   postgres-notification:
     image: postgres:latest
-    container_name: postgres
+    container_name: postgres-notification
     ports:
       - "5435:5435"
     environment:
