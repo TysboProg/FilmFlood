@@ -83,25 +83,6 @@ services:
     networks:
       main-network:
 
-  postgres-notification:
-    image: postgres:latest
-    container_name: postgres-notification
-    ports:
-      - "5435:5435"
-    environment:
-      POSTGRES_PASSWORD: inal_2411
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres-notification
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready --username=postgres --dbname=notification" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-    volumes:
-      - notification-data:/var/lib/postgresql/data
-    networks:
-      main-network:            
-
   backend-movie:
     build:
       context: ../backend/movie
@@ -139,11 +120,8 @@ services:
       - sh
       - -c
       - |
-        alembic revision --autogenerate &&
-        alembic upgrade head &&
         uv run python main.py
     environment:
-      NOTIFICATION_DATABASE_URL: postgresql+asyncpg://postgres:inal_2411@postgres-notification:5435/notification
       MAIL_USERNAME: inal.gergov152@yandex.ru
       MAIL_PASSWORD: mkirsnxltnuvbspi
       MAIL_SERVER: smtp.yandex.ru
