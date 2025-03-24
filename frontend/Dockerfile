@@ -10,7 +10,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Копируем файлы зависимостей
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Устанавливаем зависимости с помощью Bun
 RUN bun install --frozen-lockfile
