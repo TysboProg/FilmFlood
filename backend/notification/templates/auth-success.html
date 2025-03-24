@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorization Successful</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #2D2E36;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background-color: #1E1F25;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .logo span {
+      color: #E53935;
+    }
+    .success-icon {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .success-icon .circle {
+      width: 80px;
+      height: 80px;
+      background-color: #1E1F25;
+      border: 2px solid #E53935;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #E53935;
+    }
+    .message {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .message h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .message p {
+      color: #B0B0B0;
+      line-height: 1.5;
+    }
+    .details {
+      background-color: #2D2E36;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .details-label {
+      color: #B0B0B0;
+    }
+    .details-value {
+      font-weight: bold;
+    }
+    .button {
+      display: block;
+      background-color: #E53935;
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 30px 0;
+    }
+    .footer {
+      text-align: center;
+      color: #B0B0B0;
+      font-size: 12px;
+      margin-top: 30px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .social-icon {
+      width: 30px;
+      height: 30px;
+      background-color: #2D2E36;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .current-date {
+      color: #B0B0B0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="header">
+      <div class="logo">Film<span>FLOOD</span></div>
+      <div class="current-date">
+        <script>
+          document.write(new Date().toLocaleDateString());
+        </script>
+      </div>
+    </div>
+
+    <div class="success-icon">
+      <div class="circle">✓</div>
+    </div>
+
+    <div class="message">
+      <h1>Успешная авторизация!</h1>
+      <p>Вы успешно вошли в свою учетную запись. Добро пожаловать!</p>
+    </div>
+
+    <div class="details">
+      <div class="details-row">
+        <div class="details-label">Username</div>
+        <div class="details-value">{{ username }}</div>
+      </div>
+      <div class="details-row">
+        <div class="details-label">Email</div>
+        <div class="details-value">{{ email }}</div>
+      </div>
+      <div class="details-row">
+        <div class="details-label">Время логина</div>
+        <div class="details-value">
+          <script>
+            document.write(new Date().toLocaleTimeString());
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <a href="https://filmflood.ru/" class="button">Вернуться на главную страницу</a>
+
+    <p style="text-align: center; color: #B0B0B0;">Желаю вам удачи и <span style="color: #E53935; text-decoration: none;">приятного просмотра</span>  на нашем сайте.</p>
+
+    <div class="footer">
+      <p>© 2025 Film.FLOOD. Все права НЕ защищены.</p>
+      <p>Это автоматическое сообщение, пожалуйста, не отвечайте.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
