@@ -1,5 +1,6 @@
 # Используем базовый образ с Bun
-FROM oven/bun:1.0.0-alpine AS base
+FROM node:alpine
+RUN npm install -g bun AS base
 
 # Этап установки зависимостей
 FROM base AS deps
