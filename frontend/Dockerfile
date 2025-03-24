@@ -1,5 +1,5 @@
 # Используем базовый образ с Bun
-FROM node:alpine
+FROM node:18-alpine
 RUN npm install -g bun AS base
 
 # Этап установки зависимостей
