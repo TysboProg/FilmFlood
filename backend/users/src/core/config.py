@@ -1,14 +1,10 @@
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, FilePath, BaseModel
-from dotenv import load_dotenv
 from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_FILE = BASE_DIR / ".env"
-if not load_dotenv(ENV_FILE):
-    print(f"⚠️ Не удалось загрузить .env из {ENV_FILE}, проверьте путь!")
 
 
 class S3Config(BaseSettings):
@@ -19,7 +15,6 @@ class S3Config(BaseSettings):
     endpoint_url: str = Field(..., alias="S3_ENDPOINT_URL")
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), "../../.env"),
         extra="allow",
         env_prefix="S3_",
     )
@@ -67,7 +62,7 @@ class Settings(BaseSettings):
     s3_conf: S3Config = Field(default_factory=S3Config)
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), "../../.env"), extra="allow"
+        extra="allow"
     )
 
 

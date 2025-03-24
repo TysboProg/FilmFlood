@@ -1,19 +1,11 @@
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
-from dotenv import load_dotenv
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
-ENV_FILE = BASE_DIR / "docker" / ".env"
-if not load_dotenv(ENV_FILE):
-    print(f"⚠️ Не удалось загрузить .env из {ENV_FILE}, проверьте путь!")
 
 class KafkaConfig(BaseSettings):
     bootstrap_servers: str = Field(..., alias='KAFKA_BOOTSTRAP_SERVERS')
 
     model_config = SettingsConfigDict(
-        env_file=ENV_FILE,
         extra='allow',
         env_prefix='KAFKA_'
     )
@@ -26,7 +18,7 @@ class S3Config(BaseSettings):
     endpoint_url: str = Field(..., alias="S3_ENDPOINT_URL")
 
     model_config = SettingsConfigDict(
-        env_prefix="S3_", env_file=ENV_FILE, extra="allow"
+        env_prefix="S3_", extra="allow"
     )
 
 
@@ -36,7 +28,7 @@ class Settings(BaseSettings):
     kafka: KafkaConfig = Field(default_factory=KafkaConfig)
     s3_conf: S3Config = Field(default_factory=S3Config)
 
-    model_config = SettingsConfigDict(env_file=ENV_FILE, extra="allow")
+    model_config = SettingsConfigDict(extra="allow")
 
 
 @lru_cache
